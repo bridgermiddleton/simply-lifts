@@ -1,0 +1,23 @@
+-- SCHEMA
+
+-- Make sure to run PRAGMA foreign_keys = on before at the start of each session on sqlite3 CLI
+
+-- 
+
+-- Users Table
+CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL, email TEXT NOT NULL UNIQUE, hash TEXT NOT NULL);
+
+-- Exercises Table
+CREATE TABLE exercises (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, user_id INTEGER NOT NULL, name TEXT NOT NULL, FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE);
+
+-- Workouts Table
+CREATE TABLE workouts (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, user_id INTEGER NOT NULL, name TEXT NOT NULL, FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE);
+
+-- Workout Exercises Join Table
+CREATE TABLE workout_exercises (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, workout_id INTEGER NOT NULL, exercise_id INTEGER NOT NULL, sets INTEGER NOT NULL, reps INTEGER NOT NULL, specific_order INTEGER NOT NULL, FOREIGN KEY (workout_id) REFERENCES workouts(id) ON DELETE CASCADE, FOREIGN KEY (exercise_id) REFERENCES exercises(id) ON DELETE CASCADE);
+
+-- Workout Logs (Workout Session Table)
+CREATE TABLE workout_logs (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, user_id INTEGER NOT NULL, workout_id INTEGER NOT NULL, date DATE NOT NULL, FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, FOREIGN KEY (workout_id) REFERENCES workouts(id) ON DELETE CASCADE);
+
+-- Log Entries Table
+CREATE TABLE log_entries (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, log_id INTEGER NOT NULL, exercise_id INTEGER NOT NULL, set_number INTEGER NOT NULL, weight INTEGER NOT NULL, reps INTEGER NOT NULL, FOREIGN KEY (log_id) REFERENCES workout_logs(id) ON DELETE CASCADE, FOREIGN KEY (exercise_id) REFERENCES exercises(id) ON DELETE CASCADE);
