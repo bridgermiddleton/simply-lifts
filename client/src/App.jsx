@@ -1,21 +1,25 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import './App.css'
-import './components/LoginSignUp/LoginSignUp'
-import { LoginSignUp } from './components/LoginSignUp/LoginSignUp'
+import { Login } from './pages/Login'
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+import { Signup } from './pages/Signup'
+import { Home } from './pages/Home'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
-   <div>
-    <LoginSignUp/>
-   </div>
+   <Routes>
+      <Route path="/" element={<Login/>} />
+      <Route path="/signup" element={<Signup/>}/>
+      <Route path='/home' element={<Home />}/>
+   </Routes>
   )
 }
 
