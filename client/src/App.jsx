@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { createContext, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
@@ -10,14 +10,17 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { Signup } from './pages/Signup'
 import { Home } from './pages/Home'
+import { AuthProvider } from './context/AuthContext'
+
 
 function App() {
-  const [count, setCount] = useState(0)
+
 
   return (
    <Routes>
       <Route path="/" element={<Login/>} />
       <Route path="/signup" element={<Signup/>}/>
+
       <Route path='/home' element={<Home />}/>
    </Routes>
   )
