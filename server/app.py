@@ -3,18 +3,21 @@ from flask_cors import CORS
 from flask_session import Session
 import datetime
 import bcrypt
+from flask_bcrypt import Bcrypt
 import sqlite3
 from helpers import getDB, createCursor
 
 # instantiate the app
 app = Flask(__name__)
 
+app.debug = True
+
 # Setting up secret key for session management
 
-app.secret_key = "testkey"
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 # allows us to make requests to other urls (since our frontend and backend are hosted on different urls, we need to do this)
-CORS(app)
+CORS(app, supports_credentials=True, origins="http://localhost:5173")
 
 # register
 @app.route('/api/register', methods=["POST"])
@@ -47,12 +50,15 @@ def register():
             try:
                 cursor.execute("INSERT INTO users (name, email, hash) VALUES (?, ?, ?)", (name, email, hashed_password))
                 db.commit()
-                response = {"message": "success"}
+                cursor.execute("SELECT * FROM users WHERE email=?", (email,))
+                user = cursor.fetchone()
+                session["user_id"] = user[0]
+                response = {"message": "success", "user_id": user[0]}
                 return jsonify(response);
 
                 # if it didn't work, we throw a response with the error message
             except Exception as e:
-                response = {"message": e}
+                response = {"message": str(e)}
                 return jsonify(response)
 
                 # after all is said and done, we need to close our cursor and our DB so we don't run into the threading issue
@@ -74,17 +80,25 @@ def login():
         cursor = createCursor(db)
         data = request.get_json()
         email = data.get("email")
-        password = data.get("password")
+        print(email)
+        password_str = data.get("password")
+        password_bytes = password_str.encode("utf-8")
 
         try:
-            user = cursor.execute("SELECT * FROM users WHERE email=?", (email))
-            if user and bcrypt.check_password_hash(user.password, password):
-                response = {"user_id": user.id}
-                return jsonify(response);
+            cursor.execute("SELECT * FROM users WHERE email=?", (email,))
+            user = cursor.fetchone()
+            print(user)
+            print(bcrypt.checkpw(password_bytes, user[3]))
+            if user and bcrypt.checkpw(password_bytes, user[3]):
+                response = {"user_id": user[0]}
+                session['user_id'] = user[0]
+                print(session['user_id'])
+                return jsonify(response), 200;
                 # if it didn't work, we throw a response with the error message
         except Exception as e:
-            response = {"message": e}
-            return jsonify(response)
+            error_str = str(e)
+            response = {"status": "error", "message": error_str}
+            return jsonify(response), 404
 
                 # after all is said and done, we need to close our cursor and our DB so we don't run into the threading issue
         finally:
@@ -96,18 +110,22 @@ def login():
 def me():
 
     if not session:
-
         response = {"message": "unauthenticated"}
         return response
     elif "user_id" in session:
-        response = {"user_id": session["user_id"]}
-        return response
+        print(session)
+        response = {"message": "authenticated", "user_id": session["user_id"]}
+        return jsonify(response)
     else:
+        print(session)
         response = {"message": "unauthenticated"}
-        return response
+        return jsonify(response)
 
 @app.route('/api/logout', methods=["POST"])
 def logout():
+    if request.method == "POST":
 
-    return
+        session.pop('user_id', None)
         
+        return "Success"
+    return

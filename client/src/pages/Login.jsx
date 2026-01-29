@@ -29,6 +29,7 @@ export const Login = () => {
 
     const handleSubmit = async (event) => {
       event.preventDefault();
+      console.log('hello');
       try {
         console.log("almost there")
          await login(formData.email, formData.password);
@@ -45,14 +46,14 @@ export const Login = () => {
             flexDirection: 'column',
             width: '100%',
             margin: 'auto'
-        }} component="form">
+        }} component="form" onSubmit={handleSubmit}>
             <Typography variant='h4' sx={{color: 'black', mb:3}}>Login</Typography>
 
-                <TextField onChange={handleFormChange} margin='normal' variant='standard' required label='Email'/>
+                <TextField onChange={handleFormChange} name='email' margin='normal' variant='standard' required label='Email'/>
 
-                <TextField onChange={handleFormChange} margin='normal' variant='standard' label='Password' type='password' required/>
+                <TextField onChange={handleFormChange} name='password' margin='normal' variant='standard' label='Password' type='password' required/>
 
-                <Button onSubmit={handleSubmit} type='submit' sx={{m: 2}} variant='contained'>Login</Button>
+                <Button type='submit' sx={{m: 2}} variant='contained'>Login</Button>
         </Box>
         <p style={{color: 'black'}}>Not registered?  Sign up <a href="/signup">here</a></p>
     </Container>

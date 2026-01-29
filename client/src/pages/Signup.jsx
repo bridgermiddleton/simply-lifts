@@ -2,8 +2,10 @@ import React, { useState } from 'react'
 import { Box, Button, Container, TextField, Typography } from '@mui/material'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 export const Signup = () => {
 
+    const { setUser } = useAuth();
   // Form data state
   const [formData, setFormData] = useState({
     name: '',
@@ -58,7 +60,8 @@ export const Signup = () => {
         console.log(result)
         if (result.message == "success")
         {
-          navigate('/home')
+          setUser(result.user_id);
+          navigate('/home');
         }
       }
 

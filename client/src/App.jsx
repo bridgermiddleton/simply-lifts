@@ -10,7 +10,7 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { Signup } from './pages/Signup'
 import { Home } from './pages/Home'
-import { AuthProvider } from './context/AuthContext'
+import ProtectedRoutes from './utils/ProtectedRoutes'
 
 
 function App() {
@@ -20,8 +20,9 @@ function App() {
    <Routes>
       <Route path="/" element={<Login/>} />
       <Route path="/signup" element={<Signup/>}/>
-
+      <Route element={<ProtectedRoutes/>}>
       <Route path='/home' element={<Home />}/>
+      </Route>
    </Routes>
   )
 }

@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useState} from 'react'
 import { useNavigate } from 'react-router-dom';
 
 
-const AuthContext = createContext()
+const AuthContext = createContext();
 
 
 export function useAuth() {
@@ -16,20 +16,28 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         // Check if user is logged in
-        fetch('/api/auth')
+        fetch('/api/auth', {
+            credentials: "include"
+        })
         .then(response => response.json())
         .then(data => {
-            setUser(data.user_id);
+            if (data.message == "unauthenticated")
+            {
+                setUser(null)
+            }
+            else
+            {
+                setUser(data.user_id);
+            }
             setLoading(false);
         }).catch((e) => {
-            navigate('/');
+            console.error(e);
     
         });
     }, []);
     
     
     const login = async (email, password) => {
-        event.preventDefault();
         const response = await fetch("/api/login", {
             method: "POST",
     
@@ -37,7 +45,8 @@ export const AuthProvider = ({ children }) => {
                 'Content-Type': 'application/json',
             },
     
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify({ email, password }),
+            credentials: 'include'
         });
     
         if (!response.ok)
@@ -50,12 +59,21 @@ export const AuthProvider = ({ children }) => {
         navigate('/home');
     };
     
-    const logout = () => {
+    const logout = async () => {
+        const response = await fetch("/api/logout", {
+            method: "POST"
+        })
+
+        if (!response.ok)
+        {
+            throw new Error('Failed logout')
+        }
         setUser(null);
+        navigate('/');
     }
     
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <AuthContext.Provider value={{ user, setUser, login, logout }}>
             {!loading && children}
         </AuthContext.Provider>
     )
