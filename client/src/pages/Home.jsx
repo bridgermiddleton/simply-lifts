@@ -1,6 +1,7 @@
 import React, { use } from 'react'
 import { useAuth } from '../context/AuthContext';
 import { Button } from '@mui/material';
+import NavBar from '../components/NavBar';
 export const Home = () => {
   const { logout } = useAuth();
 
@@ -19,8 +20,9 @@ export const Home = () => {
 
   }
   return (
-    <div>
-        <Button onClick={handleLogout} variant='contained' ></Button>
-    </div>
+    <>
+      <NavBar />
+        {/* <Button onClick={handleLogout} variant='contained' ></Button> */}
+    </>
   )
 }
