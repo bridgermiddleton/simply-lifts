@@ -1,6 +1,7 @@
 import React, { use } from 'react'
 import { Button, Typography } from '@mui/material';
 import NavBar from '../components/NavBar';
+import { Link } from 'react-router-dom';
 export const Home = () => {
 
   return (
@@ -12,7 +13,7 @@ export const Home = () => {
       <Typography variant='h3' style={{color: 'black'}}>
         Make tracking your workouts a simple and seamless process.  No fluff, no AI, just you and your lifts.
       </Typography>
-
+    <Button><Link to='/workouts'>Let's Lift</Link></Button>
     </>
   )
 }

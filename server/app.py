@@ -20,6 +20,22 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 CORS(app, supports_credentials=True, origins="http://localhost:5173")
 
 
+# get workouts
+
+@app.route('/api/workouts', methods=["GET"])
+def get_workouts():
+
+    if request.method == "GET":
+        db = getDB()
+        cursor = createCursor(db)
+        user_id = session["user_id"]
+        cursor.execute("SELECT * FROM workouts WHERE user_id=?", (user_id,))
+        rows = cursor.fetchall()
+        response = {"workouts": rows}
+        print("rows", rows)
+        return response
+    return
+
 
 # create workout
 

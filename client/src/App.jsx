@@ -12,6 +12,7 @@ import { Signup } from './pages/Signup'
 import { Home } from './pages/Home'
 import ProtectedRoutes from './utils/ProtectedRoutes'
 import { CreateWorkout } from './pages/CreateWorkout'
+import { Workouts } from './pages/Workouts'
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
       <Route element={<ProtectedRoutes/>}>
       <Route path='/home' element={<Home />}/>
       <Route path='/create' element={<CreateWorkout />}/>
+      <Route path='/workouts' element={<Workouts />}/>
       </Route>
    </Routes>
   )
