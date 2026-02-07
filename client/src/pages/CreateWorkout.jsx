@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
 import NavBar from '../components/NavBar'
 import { Box, Typography, TextField, Button } from '@mui/material'
+import { useNavigate } from 'react-router-dom';
 
 export const CreateWorkout = () => {
 
     const [exerciseArray, setExerciseArray] = useState([{}]);
     const [workoutName, setWorkoutName] = useState("");
 
-
+    const navigate = useNavigate();
     const handleNameChange = (event) => {
         setWorkoutName(event.target.value);
     }

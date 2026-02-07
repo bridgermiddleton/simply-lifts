@@ -31,11 +31,35 @@ def create_workout():
         db = getDB()
         cursor = createCursor(db)
         data = request.get_json()
-        name = data[name]
-        exercises = data[exerciseArray]
-        for exercise in exercises:
-            
-        return
+        name = data["name"]
+        user_id = session["user_id"]
+        exercises = data["exerciseArray"]
+        print("data:", data)
+        print("user_id:", user_id)
+        print("name:", name)
+        print("exercises:", exercises)
+        try:
+            cursor.execute("INSERT INTO workouts (user_id, name) VALUES (?, ?)", (user_id, name))
+            db.commit()
+            workout_id = cursor.lastrowid
+            count = 0
+            for exercise in exercises:
+                print("exercise:", exercise)
+                cursor.execute("INSERT INTO exercises (user_id, name) VALUES (?, ?)", (user_id, exercise["exerciseName"]))
+                db.commit()
+                exercise_id = cursor.lastrowid
+                cursor.execute("INSERT INTO workout_exercises (workout_id, exercise_id, sets, reps, specific_order) VALUES (?, ?, ?, ?, ?)", (workout_id, exercise_id, exercise["sets"], exercise["reps"], count))
+                db.commit()
+                count += 1
+
+            response = {"message": "success"}
+            return jsonify(response)
+        except Exception as e:
+            response = {"message": str(e)}
+            return jsonify(response)
+        finally:
+            cursor.close()
+            db.close()
     return
 # register
 @app.route('/api/register', methods=["POST"])
@@ -47,6 +71,7 @@ def register():
         db = getDB()
         cursor = createCursor(db)
         data = request.get_json()
+        
         print(data)
 
         # if data isn't empty...
