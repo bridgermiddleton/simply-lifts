@@ -19,6 +19,24 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 # allows us to make requests to other urls (since our frontend and backend are hosted on different urls, we need to do this)
 CORS(app, supports_credentials=True, origins="http://localhost:5173")
 
+
+
+# create workout
+
+@app.route('/api/create-workout', methods=["POST"])
+def create_workout():
+
+    if request.method == "POST":
+
+        db = getDB()
+        cursor = createCursor(db)
+        data = request.get_json()
+        name = data[name]
+        exercises = data[exerciseArray]
+        for exercise in exercises:
+            
+        return
+    return
 # register
 @app.route('/api/register', methods=["POST"])
 def register():

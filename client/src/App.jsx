@@ -11,6 +11,7 @@ import '@fontsource/roboto/700.css';
 import { Signup } from './pages/Signup'
 import { Home } from './pages/Home'
 import ProtectedRoutes from './utils/ProtectedRoutes'
+import { CreateWorkout } from './pages/CreateWorkout'
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
       <Route path="/signup" element={<Signup/>}/>
       <Route element={<ProtectedRoutes/>}>
       <Route path='/home' element={<Home />}/>
+      <Route path='/create' element={<CreateWorkout />}/>
       </Route>
    </Routes>
   )

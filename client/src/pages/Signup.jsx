@@ -78,7 +78,7 @@ export const Signup = () => {
     <Box sx={{
         display:'flex',
         flexDirection: 'column',
-        width: '100%',
+        width: '50%',
         margin: 'auto'
     }} component="form" onSubmit={handleSubmit}>
         <Typography variant='h4' sx={{color: 'black', mb:3}}>Sign Up</Typography>
