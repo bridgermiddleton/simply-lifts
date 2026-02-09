@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Box, Card, CardActions, CardContent, Button, Typography } from '@mui/material'
 import NavBar from '../components/NavBar'
+import { useNavigate } from 'react-router-dom'
 
 export const Workouts = () => {
     const [workouts, setWorkouts] = useState([])
+    const navigate = useNavigate();
     useEffect(() => {
         fetch('/api/workouts', {
             credentials: "include"
@@ -12,7 +14,11 @@ export const Workouts = () => {
         .then(data => {
             setWorkouts(data["workouts"])
         })
-    }, [])
+    }, []);
+
+    const handleClick = (event, workout) => {
+        navigate(`/workouts/${workout[0]}/start`);
+    }
   return (
     <>
     <NavBar />
@@ -25,7 +31,7 @@ export const Workouts = () => {
                 </Typography>
             </CardContent>
             <CardActions>
-                <Button>Start</Button>
+                <Button onClick={(event) => handleClick(event, workout)}>Start</Button>
             </CardActions>
 
         </Card>

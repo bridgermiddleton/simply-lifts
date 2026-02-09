@@ -1,7 +1,7 @@
 from flask import Flask, flash, redirect, request, session, jsonify
 from flask_cors import CORS
 from flask_session import Session
-import datetime
+from datetime import datetime
 import bcrypt
 from flask_bcrypt import Bcrypt
 import sqlite3
@@ -19,6 +19,80 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 # allows us to make requests to other urls (since our frontend and backend are hosted on different urls, we need to do this)
 CORS(app, supports_credentials=True, origins="http://localhost:5173")
 
+# create workout log
+
+@app.route('/api/log-workout', methods=["POST"])
+def create_workout_log():
+
+    if request.method == "POST":
+        data = request.get_json()
+        print("data", data)
+        db = getDB()
+        cursor = createCursor(db)
+        date = datetime.now()
+        user_id = session["user_id"]
+        workout_id = data["workoutId"]
+        exercises = data['logData']
+        try:
+            cursor.execute("INSERT INTO workout_logs (user_id, workout_id, date) VALUES (?, ?, ?)", (user_id, workout_id, date))
+            log_id = cursor.lastrowid
+            db.commit()
+            for exercise in exercises:
+                exercise_id = exercise['exerciseId']
+                sets = exercise['sets']
+
+                for s in sets:
+                    set_number = s['setNumber']
+                    weight = s['weight']
+                    reps = s['reps']
+                    cursor.execute("INSERT INTO log_entries (log_id, exercise_id, set_number, weight, reps) VALUES(?, ?, ?, ?, ?)", (log_id, exercise_id, set_number, weight, reps))
+                    db.commit()
+            
+            response = {"message": "success"}
+            return jsonify(response)
+        except Exception as e:
+            response = {"message": str(e)}
+            return jsonify(response)
+        
+        finally:
+            cursor.close()
+            db.close()
+    return
+
+
+
+
+# fetch workout template
+
+@app.route('/api/workouts/<workout_id>', methods=["GET"])
+def get_workout_template(workout_id):
+    
+    if request.method == "GET":
+        db = getDB()
+        cursor = createCursor(db)
+        cursor.execute("SELECT * FROM workout_exercises WHERE workout_id=? ORDER BY specific_order", (workout_id,))
+        workout_exercises = cursor.fetchall()
+        print(workout_exercises)
+        exercise_array = []
+        for workout_exercise in workout_exercises:
+            exercise_id = workout_exercise[2]
+            sets = workout_exercise[3]
+            reps = workout_exercise[4]
+            order = workout_exercise[5]
+            cursor.execute("SELECT name FROM exercises WHERE id=?", (exercise_id,))
+            exercise_name = cursor.fetchone()[0]
+            exercise_array.append({"exercise_id": exercise_id, "name": exercise_name, "sets": sets, "reps": reps, "order": order})
+            
+        cursor.execute("SELECT name FROM workouts WHERE id=?", (workout_id,))
+        workout_name = cursor.fetchone()[0]
+        response = {"message": "success", "workout_name": workout_name,"exercises": exercise_array}
+        cursor.close()
+        db.close()
+        return jsonify(response)
+    return
+
+
+
 
 # get workouts
 
@@ -33,6 +107,9 @@ def get_workouts():
         rows = cursor.fetchall()
         response = {"workouts": rows}
         print("rows", rows)
+        cursor.close()
+        db.close()
+        # maybe jsonify?
         return response
     return
 

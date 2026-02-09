@@ -11,6 +11,7 @@ import { Home } from './pages/Home'
 import ProtectedRoutes from './utils/ProtectedRoutes'
 import { CreateWorkout } from './pages/CreateWorkout'
 import { Workouts } from './pages/Workouts'
+import { WorkoutSession } from './pages/WorkoutSession';
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
       <Route path='/home' element={<Home />}/>
       <Route path='/create' element={<CreateWorkout />}/>
       <Route path='/workouts' element={<Workouts />}/>
+      <Route path='/workouts/:workoutId/start' element={<WorkoutSession/>}/>
       </Route>
    </Routes>
   )

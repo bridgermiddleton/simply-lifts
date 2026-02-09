@@ -22,7 +22,7 @@ export const CreateWorkout = () => {
     }
 
     const handleExerciseChange = (event, index) => {
-        const {name, value} = event.target;
+        const {name, value} = event.target
         const newArray = [...exerciseArray]
         newArray[index][name] = value
         setExerciseArray(newArray);
