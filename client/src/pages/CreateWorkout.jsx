@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import NavBar from '../components/NavBar'
-import { Box, Typography, TextField, Button } from '@mui/material'
+import { Box, Typography, TextField, Button, Divider } from '@mui/material'
 import { useNavigate } from 'react-router-dom';
 
 export const CreateWorkout = () => {
@@ -74,37 +74,34 @@ export const CreateWorkout = () => {
   return (
     <>
     <NavBar />
-    <Box sx={{alignItems: 'center', mt: '20px'}}>
+    <Box sx={{alignItems: 'center', mt: '100px'}}>
         <Typography sx={{color:'black', fontSize: '50px', textAlign:'center'}}>Create a Workout</Typography>
     </Box>
         <Box sx={{
             display:'flex',
             flexDirection: 'column',
+            alignItems: 'center',
             width: '50%',
             margin: 'auto'
         }} component="form" onSubmit={handleSubmit}>
-    <TextField onChange={(event) => handleNameChange(event)} sx={{mr:'10px'}} name='workoutName' margin='normal' variant='standard' required label='Workout Name'/>
+    <TextField onChange={(event) => handleNameChange(event)} sx={{mr:'10px', mb: 10}} name='workoutName' margin='normal' variant='standard' required label='Workout Name'/>
+    <Typography sx={{color: 'black'}} variant='h4'>Exercises</Typography>
     {exerciseArray.map((exercise, index) => (
-        <Box sx={{
-            display:'flex',
-            flexDirection: 'row',
-            width: '50%',
-            margin: 'auto'
-        }}>
+        <div key={index} style={{display: 'flex', flexDirection: 'column'}}>
+            <Divider sx={{mt: 3, borderColor: 'black', color: 'black'}}>Exercise {index + 1}</Divider>
+            <TextField onChange={(event) => handleExerciseChange(event, index)} name='exerciseName' margin='normal' variant='standard' required label='Exercise Name'/>
 
-            <TextField onChange={(event) => handleExerciseChange(event, index)} sx={{mr:'10px'}} name='exerciseName' margin='normal' variant='standard' required label='Exercise Name'/>
+            <TextField onChange={(event) => handleExerciseChange(event, index)} name='sets' margin='normal' variant='standard' label='Number of Sets' type='number' required/>
 
-            <TextField onChange={(event) => handleExerciseChange(event, index)} sx={{mr:'10px'}}  name='sets' margin='normal' variant='standard' label='Number of Sets' type='number' required/>
+            <TextField onChange={(event) => handleExerciseChange(event, index)}  name='reps' margin='normal' variant='standard' label='Number of Reps' type='number' required/>
 
-            <TextField onChange={(event) => handleExerciseChange(event, index)} sx={{mr:'10px'}}  name='reps' margin='normal' variant='standard' label='Number of Reps' type='number' required/>
-
-        </Box>
+        </div>
 
     ))}
         
-    <Button onClick={handleAddAnother} sx={{m: 2}} variant='contained'>Add Another</Button>
+    <Button onClick={handleAddAnother} sx={{mt: 4}} variant='contained'>Add Another</Button>
 
-    <Button sx={{m: 2}} variant='contained' type='submit'>Create</Button>
+    <Button sx={{mt: 4}} variant='contained' type='submit' color='success'>Create</Button>
 
     </Box>
     </>

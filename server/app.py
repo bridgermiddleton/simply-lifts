@@ -19,6 +19,35 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 # allows us to make requests to other urls (since our frontend and backend are hosted on different urls, we need to do this)
 CORS(app, supports_credentials=True, origins="http://localhost:5173")
 
+# show past workouts
+
+@app.route('/api/past-workouts', methods=["GET"])
+def get_past_workouts():
+
+    if request.method == "GET":
+        db = getDB()
+        cursor = createCursor(db)
+        user_id = session['user_id']
+
+        cursor.execute("SELECT * FROM workout_logs WHERE user_id=?", (user_id,))
+        logs = cursor.fetchall()
+        logArray = []
+        for log in logs:
+            workout_id = log[2]
+            cursor.execute("SELECT name FROM workouts WHERE id=?", (workout_id,))
+            workout_name = cursor.fetchone()[0]
+            date = log[3]
+            logArray.append({"name": workout_name, "date": date})
+        
+        response = {"message": "success", "logs": logArray}
+        return jsonify(response)
+    else:
+        response = {"message": "failure"}
+        return jsonify(response)
+        
+
+
+
 # create workout log
 
 @app.route('/api/log-workout', methods=["POST"])
@@ -30,6 +59,7 @@ def create_workout_log():
         db = getDB()
         cursor = createCursor(db)
         date = datetime.now()
+        date = date.strftime("%b %d, %Y, %I:%M %p")
         user_id = session["user_id"]
         workout_id = data["workoutId"]
         exercises = data['logData']

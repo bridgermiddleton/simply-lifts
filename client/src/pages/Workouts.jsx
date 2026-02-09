@@ -22,9 +22,10 @@ export const Workouts = () => {
   return (
     <>
     <NavBar />
-<Box sx={{alignItems: 'center', mt: '60px'}}>
+<Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mt: '60px'}}>
+    <Typography sx={{color: 'black'}} variant='h3'>Select Your Workout</Typography>
 {workouts.map((workout, index) => (
-        <Card sx={{minWidth: 275, mt: 5}}>
+        <Card key={index} sx={{minWidth: 275, mt: 5}}>
             <CardContent>
                 <Typography>
                     {workout[2]}

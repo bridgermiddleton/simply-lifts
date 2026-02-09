@@ -79,7 +79,8 @@ export const Signup = () => {
         display:'flex',
         flexDirection: 'column',
         width: '50%',
-        margin: 'auto'
+        margin: 'auto',
+        alignItems: 'center'
     }} component="form" onSubmit={handleSubmit}>
         <Typography variant='h4' sx={{color: 'black', mb:3}}>Sign Up</Typography>
             <TextField name='name' value={formData.name} onChange={handleFormChange} margin='normal' variant='standard' required label='Name'/>
@@ -90,7 +91,9 @@ export const Signup = () => {
 
             <Button type='submit' sx={{m: 2}} variant='contained'>Sign Up</Button>
     </Box>
-    <p style={{color: 'black'}}>Already registered?  Login <Link to="/">here</Link></p>
+    <Box>
+    <p style={{color: 'black', textAlign: 'center'}}>Already registered?  Login <Link to="/">here</Link></p>
+    </Box>
 </Container>
   )
 }

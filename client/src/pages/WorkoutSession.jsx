@@ -100,7 +100,7 @@ export const WorkoutSession = () => {
         component='form'
         onSubmit={handleSubmit}>
     {exercises.map((exercise, index) => (
-        <Box sx={{
+        <Box key={exercise.id} sx={{
             display:'flex',
             flexDirection: 'column',
             width: '50%',
@@ -109,18 +109,18 @@ export const WorkoutSession = () => {
 
             <Typography variant='h6' sx={{mr:'10px', color: 'black', mb: 1, mt: 2}}>{exercise["name"]}: {exercise["sets"]} x {exercise["reps"]}</Typography>
             {Array(exercise["sets"]).fill().map((_, setIdx) => (
-                <>
+                <div key={setIdx} style={{display: 'flex', flexDirection: 'row'}}>
 
-                <TextField onChange={(event) => handleChange(event, index, setIdx)} name='weight' sx={{mb: 2}} label={`Set ${setIdx + 1}`} placeholder='enter weight'></TextField>
+                <TextField onChange={(event) => handleChange(event, index, setIdx)} name='weight' sx={{mb: 2, mr: 2}} label={`Set ${setIdx + 1} weight`} placeholder='enter weight'></TextField>
                 <TextField onChange={(event) => handleChange(event, index, setIdx)} name='reps' sx={{mb: 2}} label="Reps" placeholder='enter reps completed'></TextField>
-                </>
+                </div>
             ))}
         </Box>
 
     ))}
         
 
-    <Button sx={{m: 2}} variant='contained' type='submit'>Finish Workout</Button>
+    <Button sx={{m: 2}} variant='contained' type='submit' color='success'>Finish Workout</Button>
 
     </Box>
     </>

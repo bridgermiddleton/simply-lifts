@@ -64,7 +64,7 @@ return (
                 open={Boolean(anchorEl)}
                 onClose={handleClose}>
                     <MenuItem><Link to='/create'>Create Workout</Link></MenuItem>
-                    <MenuItem>View Past Workouts</MenuItem>
+                    <MenuItem><Link to='/past-workouts'>View Past Workouts</Link></MenuItem>
                 </Menu>
                 <Typography variant='h6' component='div' sx={{ flexGrow: 1}}>
                     <Link style={{color: 'white'}} to='/home'>Simply Lifts</Link>
