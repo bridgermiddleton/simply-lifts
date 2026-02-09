@@ -44,8 +44,9 @@ export const Login = () => {
         <Box sx={{
             display:'flex',
             flexDirection: 'column',
-            width: '100%',
-            margin: 'auto'
+            width: '50%',
+            margin: 'auto',
+            alignItems: 'center',
         }} component="form" onSubmit={handleSubmit}>
             <Typography variant='h4' sx={{color: 'black', mb:3}}>Login</Typography>
 
@@ -55,7 +56,10 @@ export const Login = () => {
 
                 <Button type='submit' sx={{m: 2}} variant='contained'>Login</Button>
         </Box>
-        <p style={{color: 'black'}}>Not registered?  Sign up <a href="/signup">here</a></p>
+        <Box>
+        <p style={{color: 'black', textAlign: 'center'}}>Not registered?  Sign up <a href="/signup">here</a></p>
+        </Box>
+       
     </Container>
   )
 }
