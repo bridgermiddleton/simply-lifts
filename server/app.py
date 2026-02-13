@@ -104,6 +104,7 @@ def get_workout_template(workout_id):
         workout_exercises = cursor.fetchall()
         print(workout_exercises)
         exercise_array = []
+        user_id = session['user_id']
         for workout_exercise in workout_exercises:
             exercise_id = workout_exercise[2]
             sets = workout_exercise[3]
@@ -111,7 +112,17 @@ def get_workout_template(workout_id):
             order = workout_exercise[5]
             cursor.execute("SELECT name FROM exercises WHERE id=?", (exercise_id,))
             exercise_name = cursor.fetchone()[0]
-            exercise_array.append({"exercise_id": exercise_id, "name": exercise_name, "sets": sets, "reps": reps, "order": order})
+            cursor.execute("SELECT id FROM workout_logs WHERE user_id=? AND workout_id=? ORDER BY date DESC", (user_id, workout_id))
+            log_id = cursor.fetchone()[0]
+            cursor.execute("SELECT * FROM log_entries WHERE log_id=? AND exercise_id=? ORDER BY set_number ASC", (log_id, exercise_id))
+            logs = cursor.fetchall()
+            logs_array = []
+            if logs:
+                for log in logs:
+                    logs_array.append({"setNumber": log[3], "weight": log[4], "reps": log[5]})
+
+
+            exercise_array.append({"exercise_id": exercise_id, "name": exercise_name, "sets": sets, "reps": reps, "order": order, "logs": logs_array})
             
         cursor.execute("SELECT name FROM workouts WHERE id=?", (workout_id,))
         workout_name = cursor.fetchone()[0]

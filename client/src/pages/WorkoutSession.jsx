@@ -25,13 +25,23 @@ export const WorkoutSession = () => {
             const exercise = data['exercises'][i]
             console.log(exercise)
             const exerciseLog = {"exerciseId": exercise["exercise_id"], "sets": []};
-            for (let j = 0; j < exercise["sets"]; j++)
+            if (exercise['logs'].length == 0)
             {
-                exerciseLog["sets"].push({"setNumber": j+1, "weight": 0, "reps": 0});
+                for (let j = 0; j < exercise["sets"]; j++)
+                    {
+                        exerciseLog["sets"].push({"setNumber": j+1, "weight": 0, "reps": 0});
+                    }
             }
+            else
+            {
+                exerciseLog["sets"] = exercise["logs"]
+            }
+
             exerciseArray.push(exerciseLog);
         }
+        console.log("exercise array:", exerciseArray)
         setLogData(exerciseArray);
+        console.log("log data", logData)
         
 
     })
@@ -100,7 +110,7 @@ export const WorkoutSession = () => {
         component='form'
         onSubmit={handleSubmit}>
     {exercises.map((exercise, index) => (
-        <Box key={exercise.id} sx={{
+        <Box key={index} sx={{
             display:'flex',
             flexDirection: 'column',
             width: '50%',
@@ -108,11 +118,11 @@ export const WorkoutSession = () => {
         }}>
 
             <Typography variant='h6' sx={{mr:'10px', color: 'black', mb: 1, mt: 2}}>{exercise["name"]}: {exercise["sets"]} x {exercise["reps"]}</Typography>
-            {Array(exercise["sets"]).fill().map((_, setIdx) => (
+            {logData[index].sets.map((log, setIdx) => (
                 <div key={setIdx} style={{display: 'flex', flexDirection: 'row'}}>
 
-                <TextField onChange={(event) => handleChange(event, index, setIdx)} name='weight' sx={{mb: 2, mr: 2}} label={`Set ${setIdx + 1} weight`} placeholder='enter weight'></TextField>
-                <TextField onChange={(event) => handleChange(event, index, setIdx)} name='reps' sx={{mb: 2}} label="Reps" placeholder='enter reps completed'></TextField>
+                <TextField onChange={(event) => handleChange(event, index, setIdx)} name='weight' sx={{mb: 2, mr: 2}} label={`Set ${setIdx + 1} weight`} placeholder={`${log.weight}`}></TextField>
+                <TextField onChange={(event) => handleChange(event, index, setIdx)} name='reps' sx={{mb: 2}} label="Reps" placeholder={`${log.reps}`}></TextField>
                 </div>
             ))}
         </Box>
