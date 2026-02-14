@@ -13,7 +13,7 @@ export const PastWorkouts = () => {
             setPastWorkouts(data["logs"])
 
         })
-    })
+    }, [])
   return (
     <>
     <NavBar />
@@ -28,7 +28,11 @@ export const PastWorkouts = () => {
                 <Typography>
                     {workout["date"]}
                 </Typography>
+                
             </CardContent>
+            <CardActions>
+                <Button size='small'>View Workout</Button>
+            </CardActions>
 
         </Card>
 

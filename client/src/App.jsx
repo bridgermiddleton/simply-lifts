@@ -13,6 +13,7 @@ import { CreateWorkout } from './pages/CreateWorkout'
 import { Workouts } from './pages/Workouts'
 import { WorkoutSession } from './pages/WorkoutSession';
 import { PastWorkouts } from './pages/PastWorkouts';
+import { PastWorkoutLog } from './pages/PastWorkoutLog';
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
       <Route path='/create' element={<CreateWorkout />}/>
       <Route path='/workouts' element={<Workouts />}/>
       <Route path='/workouts/:workoutId/start' element={<WorkoutSession/>}/>
+      <Route path='/past-workouts/:logId' element={<PastWorkoutLog/>}/>
       <Route path='/past-workouts' element={<PastWorkouts/>}/>
       </Route>
    </Routes>
