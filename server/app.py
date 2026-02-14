@@ -1,4 +1,4 @@
-from flask import Flask, flash, redirect, request, session, jsonify
+from flask import Flask, flash, redirect, request, session, jsonify, send_from_directory
 from flask_cors import CORS
 from flask_session import Session
 from datetime import datetime
@@ -6,9 +6,10 @@ import bcrypt
 from flask_bcrypt import Bcrypt
 import sqlite3
 from helpers import getDB, createCursor
+import os
 
 # instantiate the app
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../dist', template_folder='../dist')
 
 app.debug = True
 
@@ -17,7 +18,57 @@ app.debug = True
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 # allows us to make requests to other urls (since our frontend and backend are hosted on different urls, we need to do this)
-CORS(app, supports_credentials=True, origins="http://localhost:5173")
+CORS(app, supports_credentials=True)
+
+# catch-all routes for deployment
+
+@app.route('/', defaults={'path': ''})
+
+@app.route('/<path:path>')
+def catch_all(path):
+    if path and os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    return send_from_directory(app.static_folder, 'index.html')
+
+# get specific past workout
+
+@app.route('/api/past-workouts/<log_id>', methods=["GET"])
+def get_past_workout_log(log_id):
+
+    if request.method == "GET":
+        db = getDB()
+        cursor = createCursor(db)
+        user_id = session['user_id']
+        cursor.execute("SELECT * FROM workout_logs WHERE id=? AND user_id=?", (log_id, user_id))
+        log_data = cursor.fetchone()
+        log_id = log_data[0]
+        date = log_data[3]
+        workout_id = log_data[2]
+        cursor.execute("SELECT * FROM workouts WHERE user_id=? AND id=?", (user_id, workout_id))
+        workout_data = cursor.fetchone()
+        workout_name = workout_data[2]
+        cursor.execute("SELECT * FROM workout_exercises WHERE workout_id=? ORDER BY specific_order", (workout_id,))
+        workout_exercises = cursor.fetchall()
+        workout_exercise_array = []
+        for workout_exercise in workout_exercises:
+            exercise_id = workout_exercise[2]
+            cursor.execute("SELECT * FROM exercises WHERE id=?", (exercise_id,))
+            exercise = cursor.fetchone()
+            exercise_name = exercise[2]
+            sets = workout_exercise[3]
+            reps = workout_exercise[4]
+            cursor.execute("SELECT * FROM log_entries WHERE log_id=? AND exercise_id=? ORDER BY set_number ASC", (log_id, exercise_id))
+            logs = cursor.fetchall()
+            logs_array = []
+            for log in logs:
+                logs_array.append({"setNumber": log[3], "weight": log[4], "reps": log[5]})
+            
+            workout_exercise_array.append({"exercise_name": exercise_name, "sets": sets, "reps": reps, "logs": logs_array})
+        
+        response = {"message": "success", "workout_name": workout_name, "date": date, "workout_exercises": workout_exercise_array}
+
+        return jsonify(response)
+            
 
 # show past workouts
 
@@ -37,7 +88,8 @@ def get_past_workouts():
             cursor.execute("SELECT name FROM workouts WHERE id=?", (workout_id,))
             workout_name = cursor.fetchone()[0]
             date = log[3]
-            logArray.append({"name": workout_name, "date": date})
+            log_id = log[0]
+            logArray.append({"log_id": log_id, "name": workout_name, "date": date})
         
         response = {"message": "success", "logs": logArray}
         return jsonify(response)
@@ -113,13 +165,15 @@ def get_workout_template(workout_id):
             cursor.execute("SELECT name FROM exercises WHERE id=?", (exercise_id,))
             exercise_name = cursor.fetchone()[0]
             cursor.execute("SELECT id FROM workout_logs WHERE user_id=? AND workout_id=? ORDER BY date DESC", (user_id, workout_id))
-            log_id = cursor.fetchone()[0]
-            cursor.execute("SELECT * FROM log_entries WHERE log_id=? AND exercise_id=? ORDER BY set_number ASC", (log_id, exercise_id))
-            logs = cursor.fetchall()
+            row = cursor.fetchone()
             logs_array = []
-            if logs:
-                for log in logs:
-                    logs_array.append({"setNumber": log[3], "weight": log[4], "reps": log[5]})
+            if row:
+                log_id = row[0]
+                cursor.execute("SELECT * FROM log_entries WHERE log_id=? AND exercise_id=? ORDER BY set_number ASC", (log_id, exercise_id))
+                logs = cursor.fetchall()
+                if logs:
+                    for log in logs:
+                        logs_array.append({"setNumber": log[3], "weight": log[4], "reps": log[5]})
 
 
             exercise_array.append({"exercise_id": exercise_id, "name": exercise_name, "sets": sets, "reps": reps, "order": order, "logs": logs_array})
@@ -306,3 +360,8 @@ def logout():
         
         return "Success"
     return
+
+
+if __name__ == "__main__":
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)

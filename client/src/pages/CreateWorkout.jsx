@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import NavBar from '../components/NavBar'
 import { Box, Typography, TextField, Button, Divider } from '@mui/material'
 import { useNavigate } from 'react-router-dom';
-
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import IconButton from '@mui/material/IconButton';
 export const CreateWorkout = () => {
 
     const [exerciseArray, setExerciseArray] = useState([{}]);
@@ -22,10 +23,7 @@ export const CreateWorkout = () => {
     }
 
     const handleRemoveExercise = (index) => {
-        console.log("before",exerciseArray)
-        console.log("index", index);
         const newArray = exerciseArray.filter((item, idx) => idx != index);
-        console.log("after",newArray);
         setExerciseArray(newArray);
     }
 
@@ -64,7 +62,6 @@ export const CreateWorkout = () => {
           if (response.ok)
           {
             const result = await response.json();
-            console.log(result)
             if (result.message == "success")
             {
               navigate('/home');
@@ -79,10 +76,16 @@ export const CreateWorkout = () => {
           console.error('Error submitting workout:', error)
         }
       }
+      const handleClick = () => {
+        navigate('/home');
+    }
   return (
     <>
     <NavBar />
     <Box sx={{alignItems: 'center', mt: '100px'}}>
+    <IconButton onClick={handleClick}>
+            <ArrowBackIcon/>
+        </IconButton>
         <Typography sx={{color:'black', fontSize: '50px', textAlign:'center'}}>Create a Workout</Typography>
     </Box>
         <Box sx={{

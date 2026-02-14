@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import NavBar from '../components/NavBar';
-import { Box, Card, CardActions, CardContent, Button, Typography, TextField } from '@mui/material'
+import { Box, Button, Typography, TextField } from '@mui/material'
 import { useNavigate } from 'react-router-dom';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import IconButton from '@mui/material/IconButton';
 export const WorkoutSession = () => {
 
     const {workoutId} = useParams();
@@ -18,12 +20,10 @@ export const WorkoutSession = () => {
     .then(data => {
         setWorkoutName(data["workout_name"]);
         setExercises(data["exercises"]);
-        console.log(data);
         const exerciseArray = []
         for (let i = 0; i < data["exercises"].length; i++)
         {
             const exercise = data['exercises'][i]
-            console.log(exercise)
             const exerciseLog = {"exerciseId": exercise["exercise_id"], "sets": []};
             if (exercise['logs'].length == 0)
             {
@@ -39,13 +39,14 @@ export const WorkoutSession = () => {
 
             exerciseArray.push(exerciseLog);
         }
-        console.log("exercise array:", exerciseArray)
         setLogData(exerciseArray);
-        console.log("log data", logData)
         
 
     })
     }, []);
+    const handleClick = (workout) => {
+        navigate('/home');
+    }
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -66,7 +67,6 @@ export const WorkoutSession = () => {
             if (response.ok)
             {
                 const result = await response.json();
-                console.log(result);
                 if (result.message == "success")
                 {
                     navigate('/home')
@@ -86,26 +86,27 @@ export const WorkoutSession = () => {
 
     const handleChange = (event, index, setIdx) => {
         const {name, value} = event.target
-        console.log('logData', logData)
         const newArray = [...logData]
-        console.log('new array before', newArray)
         const setsArray = newArray[index]["sets"]
         setsArray[setIdx][name] = value
-        console.log(newArray)
         setLogData(newArray)
     }
 
   return (
  <>
     <NavBar />
-    <Box sx={{alignItems: 'center', mt: 3}}>
+    <Box sx={{alignItems: 'center', mt: 7}}>
+    <IconButton onClick={handleClick}>
+            <ArrowBackIcon/>
+        </IconButton>
         <Typography sx={{color:'black', fontSize: '50px', textAlign:'center'}}>{workoutName}</Typography>
     </Box>
         <Box sx={{
             display:'flex',
             flexDirection: 'column',
             width: '50%',
-            margin: 'auto'
+            margin: 'auto',
+            alignItems: 'center'
         }}
         component='form'
         onSubmit={handleSubmit}>
