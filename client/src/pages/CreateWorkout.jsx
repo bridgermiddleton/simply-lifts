@@ -21,6 +21,14 @@ export const CreateWorkout = () => {
         
     }
 
+    const handleRemoveExercise = (index) => {
+        console.log("before",exerciseArray)
+        console.log("index", index);
+        const newArray = exerciseArray.filter((item, idx) => idx != index);
+        console.log("after",newArray);
+        setExerciseArray(newArray);
+    }
+
     const handleExerciseChange = (event, index) => {
         const {name, value} = event.target
         const newArray = [...exerciseArray]
@@ -87,14 +95,15 @@ export const CreateWorkout = () => {
     <TextField onChange={(event) => handleNameChange(event)} sx={{mr:'10px', mb: 10}} name='workoutName' margin='normal' variant='standard' required label='Workout Name'/>
     <Typography sx={{color: 'black'}} variant='h4'>Exercises</Typography>
     {exerciseArray.map((exercise, index) => (
-        <div key={index} style={{display: 'flex', flexDirection: 'column'}}>
+        <div key={index} style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
             <Divider sx={{mt: 3, borderColor: 'black', color: 'black'}}>Exercise {index + 1}</Divider>
             <TextField onChange={(event) => handleExerciseChange(event, index)} name='exerciseName' margin='normal' variant='standard' required label='Exercise Name'/>
 
             <TextField onChange={(event) => handleExerciseChange(event, index)} name='sets' margin='normal' variant='standard' label='Number of Sets' type='number' required/>
 
             <TextField onChange={(event) => handleExerciseChange(event, index)}  name='reps' margin='normal' variant='standard' label='Number of Reps' type='number' required/>
-
+            {exerciseArray.length > 1 &&
+            <Button onClick={() => handleRemoveExercise(index)} sx={{mt: 4, width: '50%'}} variant='contained' color='error'>Remove</Button>}
         </div>
 
     ))}
