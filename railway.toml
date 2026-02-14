@@ -1,5 +1,0 @@
-[build]
-command = "npm install && npm run build && pip install -r server/requirements.txt"
-
-[deploy]
-startCommand = "python3 server/app.py"
