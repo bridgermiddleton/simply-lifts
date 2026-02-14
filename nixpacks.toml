@@ -1,8 +1,11 @@
 [phases.setup]
 nixPkgs = ["python311", "pip", "nodejs_20"]
 
+[phases.install]
+cmds = ["npm install", "pip install -r server/requirements.txt""]
+
 [phases.build]
-cmds = ["npm install", "npm run build", "pip install -r server/requirements.txt"]
+cmds = ["npm run build"]
 
 [start]
 cmd = "echo 'Starting Flask...' && python3 server/app.py"
