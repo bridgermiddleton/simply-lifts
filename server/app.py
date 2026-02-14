@@ -8,17 +8,16 @@ import sqlite3
 from helpers import getDB, createCursor
 import os
 
-print("=== APP STARTING ===")
-print(f"Current working directory: {os.getcwd()}")
-print(f"Static folder: {app.static_folder}")
-print(f"Static folder exists: {os.path.exists(app.static_folder)}")
-print(f"dist contents: {os.listdir(app.static_folder) if os.path.exists(app.static_folder) else 'NOT FOUND'}")
-
 # instantiate the app
 app = Flask(__name__, static_folder='../dist', template_folder='../dist')
 
 app.debug = True
 
+print("=== APP STARTING ===")
+print(f"Current working directory: {os.getcwd()}")
+print(f"Static folder: {app.static_folder}")
+print(f"Static folder exists: {os.path.exists(app.static_folder)}")
+print(f"dist contents: {os.listdir(app.static_folder) if os.path.exists(app.static_folder) else 'NOT FOUND'}")
 # Setting up secret key for session management
 
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
