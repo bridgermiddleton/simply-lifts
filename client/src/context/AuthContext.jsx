@@ -55,7 +55,6 @@ export const AuthProvider = ({ children }) => {
         }
         const data = await response.json();
         setUser(data.user_id);
-        console.log("hi");
         navigate('/home');
     };
     

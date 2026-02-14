@@ -57,7 +57,6 @@ export const Signup = () => {
       if (response.ok)
       {
         const result = await response.json();
-        console.log(result)
         if (result.message == "success")
         {
           setUser(result.user_id);
@@ -74,13 +73,13 @@ export const Signup = () => {
     }
   }
   return (
-    <Container maxWidth='lg'>
     <Box sx={{
-        display:'flex',
-        flexDirection: 'column',
-        width: '50%',
-        margin: 'auto',
-        alignItems: 'center'
+            display:'flex',
+            flexDirection: 'column',
+            margin: 'auto',
+            alignItems: 'center',
+            height: '70vh',
+            justifyContent: 'center',
     }} component="form" onSubmit={handleSubmit}>
         <Typography variant='h4' sx={{color: 'black', mb:3}}>Sign Up</Typography>
             <TextField name='name' value={formData.name} onChange={handleFormChange} margin='normal' variant='standard' required label='Name'/>
@@ -90,10 +89,7 @@ export const Signup = () => {
             <TextField name='password' value={formData.password} onChange={handleFormChange} margin='normal' variant='standard' label='Password' type='password' required/>
 
             <Button type='submit' sx={{m: 2}} variant='contained'>Sign Up</Button>
-    </Box>
-    <Box>
     <p style={{color: 'black', textAlign: 'center'}}>Already registered?  Login <Link to="/">here</Link></p>
     </Box>
-</Container>
   )
 }

@@ -29,9 +29,7 @@ export const Login = () => {
 
     const handleSubmit = async (event) => {
       event.preventDefault();
-      console.log('hello');
       try {
-        console.log("almost there")
          await login(formData.email, formData.password);
       }
       catch (error)
@@ -40,13 +38,14 @@ export const Login = () => {
       }
     }
   return (
-    <Container maxWidth='lg'>
         <Box sx={{
             display:'flex',
             flexDirection: 'column',
-            width: '50%',
             margin: 'auto',
             alignItems: 'center',
+            height: '70vh',
+            justifyContent: 'center',
+
         }} component="form" onSubmit={handleSubmit}>
             <Typography variant='h4' sx={{color: 'black', mb:3}}>Login</Typography>
 
@@ -55,11 +54,9 @@ export const Login = () => {
                 <TextField onChange={handleFormChange} name='password' margin='normal' variant='standard' label='Password' type='password' required/>
 
                 <Button type='submit' sx={{m: 2}} variant='contained'>Login</Button>
-        </Box>
-        <Box>
+
         <p style={{color: 'black', textAlign: 'center'}}>Not registered?  Sign up <a href="/signup">here</a></p>
-        </Box>
        
-    </Container>
+        </Box>
   )
 }
