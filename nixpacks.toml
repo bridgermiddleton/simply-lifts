@@ -5,4 +5,4 @@ nixPkgs = ["python311", "nodejs_20"]
 cmds = ["npm install", "npm run build", "pip install -r server/requirements.txt"]
 
 [start]
-cmd = "python3 server/app.py"
+cmd = "echo 'Starting Flask...' && python3 server/app.py"
