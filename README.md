@@ -1,20 +1,31 @@
-# SIMPLY LIFTS
-#### Video Demo:  https://youtu.be/3zWOaBxfLaQ
-#### Description:  A simple app to track your lifts and see your progress.  No flashy features, no AI integration, just a simple workout tracker that's easy to use and see your progress. Build with React (MUI for CSS styling), Flask server, and SQLite DB.
+# Simply Lifts
 
-#### For this project, I decided to first set up my database and backend.  I decided to use a SQLite DB since we used it in CS50 and I was most familiar with its commands.  I wrote out my schema and then ran a number of commands to create each of the tables.  I then began my signup/login flow.  I would say this was the most difficult part of the app in my opinion.  My frontend was built in React and my backend in Flask, which are not easily integrated together like was the case with Flask and Jinja, so I had to figure out how to communicate the frontend and the backend.
+A no-fluff workout tracker. Just log your lifts, see what you did last week, and stay consistent!
 
-#### Essentially, I figured out Flask's session setup, creating a secret key, etc.  I then had to enable CORS so that this session cookie could be stored and passed along between the frontend and backend.  I used Material UI as a styling library for the frontend, which was also a bit of a learning curve.  I ended up figuring out the signup/login flow, using "fetch" on the frontend to call the backend route, and then having the route do some validation and such on the frontend inputs and putting it into the DB.  I had to learn how to use bcrypt for password hashing, creating a salt and then hashing the user's input and using the checkpw bcrypt function to check the password on login.
+## Tech Stack
+| Frontend | Backend | Database |
+|----------|---------|----------|
+| React | Flask | SQLite |
 
-#### My next step was figuring out how to make sure users couldn't get to any other routes unless they were signed in.  This resulted in my creating an AuthContext, which essentially is like a global checker for my app that has a useEffect hook that his my /api/auth route that checks that the user is logged in (essentially by checking the session["user_id"] cookie to see if there's a value).  I then created a ProtectedRoutes template that checks if the user if logged in, and if so it navigates to the embedded element, otherwise it reroutes the user back to the login page.
+## Why I Built This
 
-#### Once I had all of this figured out, I created the Home Page.  I also created a NavBar component with Material UI to use across all my authenticated routes.  My Home Page began as just some text.  I then created the Create Workout page, as it was necessary before I could build any other functionality.  I created a dynamic form.  Essentially I created an array in state that updated on a few instances. It was initialized to an array of objects.  Every time one of the exercise input fields changed, the respective value at the respective index was updated (is used mapping in order to iterate through the array dynamically in jsx).  If another exercise was to be added, it pushed a new exercise object onto the array, defaulting to 3 sets of 10 in state with an empty name value.  Once the user clicked create, my backend would create a workout with the user_id and workout name associated with it.  I then went through the exercise array I had on the frontend and created an exercise and then a workout_exercise (which connects workouts and exercises and holds sets, reps, and the order of the exercises).  I then return a success message to the frontend, which upon seeing that response navigates the user back to home
+For the longest time, I've been trying to find an app where I can just track my workouts and see the weights I did last week. No fluff, no AI, no subscriptions, just a simple UI for a simple task. That's what inspired me to build Simply Lifts as my final project for Harvard's CS50 class.
 
-#### I then created the Workouts Page.  This page essentially has a useEffect hook that hits my /api/workouts route and runs a query to select all workouts for the current user and returns a response with an array of the workouts.  On the frontend, thse are set as "workouts" in state and then mapped through to create cards for each workout.  Each card has a button that, with its handle click method, navigates the user to /workouts/workoutId/start.  On that page (called Workout Session), there's a useEffect hook that hits '/api/workouts/workoutId' route, which returns a json object with the workout name and an exercise array that holds the exercise id, a sets array, which contains set number, reps, and order.  This is then sent to the frontend which sets workoutName in state to the workout_name value in the response object.  Then we set the exercises value in state to the exercise array sent by the backend.  We then create a temporary exerciseArray.  For each value in the exercise array passed by the backed at the current index (we are using a for loop with 'i' initialized to 0), we create an object that has that exercise's id, and then we create an empty array assigned to the key 'sets'.  we then have another for loop that goes through the backend's exercise array at key sets.  we push to the sets array in the temp object with another object, which gets the setnumber, weight, and reps (weight and reps are initialized to 0 and will be changed as the input fields change).  We then set logData state to the exerciseArray that we have created  We have a handle change function which targets the input fields and updates values accordingly.  On submit, we hit the '/api/log-workout' route.  This rout inserts the respective values into workout_logs, and then goes through the execise array that was passed from the frontend, and then goes a level teeper by going through the sets array in each exercise object of the exercise arraay and inserts that set into the log_entries table.  Once everything is done, we send a success message and navigate the user back to home.
+## Try It Out
 
+**Live App:** [simply-lifts-production.up.railway.app](https://simply-lifts-production.up.railway.app)
 
+**Demo Account:**
+- Email: `demo@demo.com`
+- Password: `demo123`
 
-#### Finally, we have our Past Workouts Page.  This has a useEffect hook that hits the route '/api/past-workouts'.  On the backend, this essentially gets all of the workout logs from the current user (determined by session cookie) and then goes through each log and gets the name from workouts table where the workout_id is equivalent to the workout_id in that current log object.  We have a logArray that we append an object to with the workout name and the workout date.  The logArray is sent as a response aloong with a success message.  Back on the frontend, we set pastWorkouts in state to the logArray that was passed from the backend and map through that array to dynamically add each past workout for the current user.
+## Features
 
+- **Create Workout** — Build reusable workout templates
+- **Let's Lift** — Start a session using a template. If you've done it before, you'll see last session's weights
+- **Past Workouts** — Review your workout history
 
-#### I had a great time building this application and learned a ton.  Using React and Flask was difficult to setup at first but once I figured out how the backend and frontend converse.  While they aren't as compatible as Flask and Jinja, I think it was helpful to learn how frontend and backend communicate as it allows me now to be able to use any backend and frontend and know how to se the two together.  I also had to choose between using a JWT token vs a Flask session cookie.  If this were a production level app, I may use a JWT token for authentication but I think for the purposes of this application and the fact it's pretty small scale, it worked perfectly.  Also figuring out how to do protected routes that required authentication was a learning curve.  I learned about creating an AuthContext which really simplified everything, and now makes much more sense.  Overall, I learned a ton with this project and am excited to add onto it in the future!
+## Future Ideas
+
+- **Progress Dashboard** — Visualize gains over time for each exercise
+- **Workout Streak** — Heat map showing consistency (keep the streak alive!)
