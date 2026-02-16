@@ -25,7 +25,7 @@ export const PastWorkoutLog = () => {
     }, [])
 
     const handleClick = () => {
-        navigate('/home');
+        navigate('/past-workouts');
     }
   return (
 <>
