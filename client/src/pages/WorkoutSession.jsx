@@ -122,7 +122,7 @@ export const WorkoutSession = () => {
             {logData[index].sets.map((log, setIdx) => (
                 <div key={setIdx} style={{display: 'flex', flexDirection: 'row'}}>
 
-                <TextField onChange={(event) => handleChange(event, index, setIdx)} name='weight' sx={{mb: 2, mr: 2}} label={`Set ${setIdx + 1} weight`} placeholder={`${log.weight}`}></TextField>
+                <TextField onChange={(event) => handleChange(event, index, setIdx)} name='weight' sx={{mb: 2, mr: 2}} label='Weight' placeholder={`${log.weight}`}></TextField>
                 <TextField onChange={(event) => handleChange(event, index, setIdx)} name='reps' sx={{mb: 2}} label="Reps" placeholder={`${log.reps}`}></TextField>
                 </div>
             ))}
